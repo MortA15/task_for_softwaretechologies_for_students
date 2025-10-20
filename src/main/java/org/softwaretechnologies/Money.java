@@ -2,6 +2,7 @@ package org.softwaretechnologies;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Objects;
 import java.util.Random;
 
 import static java.lang.Integer.MAX_VALUE;
@@ -26,9 +27,25 @@ public class Money {
      */
     @Override
     public boolean equals(Object o) {
-        // TODO: реализуйте вышеуказанную функцию
+        if (this == o) return true; //если они равны
+        if (o == null || getClass() != o.getClass()) return false; //если о пустой или классы разные
 
-        return false;
+        Money money = (Money) o;
+
+        // Сравнение типов валют (с обработкой null)
+        if (!Objects.equals(type, money.type)) return false;
+
+        // Оба amount null - равны
+        if (amount == null && money.amount == null) return true;
+
+        // Один из amount null - не равны
+        if (amount == null || money.amount == null) return false;
+
+        // Оба amount не null - сравниваем с округлением до 4 знаков
+        BigDecimal thisScaled = amount.setScale(4, RoundingMode.HALF_UP);
+        BigDecimal otherScaled = money.amount.setScale(4, RoundingMode.HALF_UP);
+
+        return thisScaled.compareTo(otherScaled) == 0;
     }
 
     /**
@@ -48,11 +65,44 @@ public class Money {
      */
     @Override
     public int hashCode() {
-        // TODO: реализуйте вышеуказанную функцию
+        // Если amount равен null, возвращаем фиксированное значение 10000
+        if (this.amount == null) {
+            return 10000;
+        }
 
+        // Округляем сумму до 4 знаков после запятой
+        BigDecimal scaledAmount = this.amount.setScale(4, RoundingMode.HALF_UP);
+        // Умножаем округленную сумму на 10000 для преобразования в целое число
+        BigDecimal multipliedAmount = scaledAmount.multiply(BigDecimal.valueOf(10_000));
 
-        Random random = new Random();
-        return random.nextInt();
+        // Проверяем, не превышает ли умноженная сумма максимальное значение int минус 5
+        if (multipliedAmount.compareTo(BigDecimal.valueOf(MAX_VALUE - 5)) >= 0) {
+            return MAX_VALUE;
+        }
+
+        // Преобразуем умноженную сумму в целое число
+        int baseHash = multipliedAmount.intValue();
+        // Получаем числовой код для типа валюты
+        int currencyCode = getCurrencyCode();
+
+        // Суммируем базовый хеш и код валюты для получения итогового хеш-кода
+        return baseHash + currencyCode;
+    }
+
+    private int getCurrencyCode() {
+        // Если тип валюты не указан, возвращаем код 5
+        if (type == null) {
+            return 5;
+        }
+
+        // Возвращаем соответствующий код для каждого типа валюты
+        return switch (type) {
+            case USD -> 1;
+            case EURO -> 2;
+            case RUB -> 3;
+            case KRONA -> 4;
+            default -> 5;
+        };
     }
 
     /**
@@ -74,9 +124,15 @@ public class Money {
      */
     @Override
     public String toString() {
-        // TODO: реализуйте вышеуказанную функцию
-        String str = type.toString()+": "+amount.setScale(4, RoundingMode.HALF_UP).toString();
-        return str;
+        // Формируем строку для типа валюты: если null, то "null", иначе название валюты
+        String typeString = (this.type == null ? "null" : this.type.toString());
+
+        // Формируем строку для суммы: если null, то "null", иначе округленная до 4 знаков сумма
+        String amountString = (this.amount == null ? "null" :
+                this.amount.setScale(4, RoundingMode.HALF_UP).toString());
+
+        // Собираем итоговую строку в формате "ВАЛЮТА: сумма"
+        return typeString + ": " + amountString;
     }
 
     public BigDecimal getAmount() {

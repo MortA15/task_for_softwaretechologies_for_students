@@ -21,7 +21,7 @@ public class EqualsHashCodeTest {
         public int hashCode() {
             return 33;
         }
-    }
+    } //сравниваем то что ввели с родителем А. equals правильный так как будет возращать результат сравнения объектов с одинаковм хеш кодом (33)
 
     static class B {
         @Override
@@ -34,7 +34,7 @@ public class EqualsHashCodeTest {
             Random random = new Random();
             return random.nextInt();
         }
-    }
+    }//не подходит под условие из-за рандомного хеш кода
 
     static class C {
         int a;
@@ -42,7 +42,7 @@ public class EqualsHashCodeTest {
         @Override
         public boolean equals(Object o) {
             return a == ((C) o).a;
-        }
+        } //не подходит потому что не факт что объект о класса С
 
         @Override
         public int hashCode() {
@@ -55,8 +55,8 @@ public class EqualsHashCodeTest {
 
         @Override
         public boolean equals(Object obj) {
-            if(obj == null) return false;
-            return obj instanceof D;
+            if(obj == null) return false;// неправильно из-за этого (а если первый объект (a) тоже null (пустой))
+            return obj instanceof D; //возвращает является ли obj объектом класса D
         }
 
         @Override
@@ -70,12 +70,12 @@ public class EqualsHashCodeTest {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o) return true; //если они равны
+            if (o == null || getClass() != o.getClass()) return false; // если о пустой или разные классы
 
             E f = (E) o;
 
-            return a == f.a;
+            return a == f.a; //выводим результат сравниваем значение объектов
         }
 
         @Override
@@ -103,11 +103,11 @@ public class EqualsHashCodeTest {
 
         // TODO: Встатьте нужные выражения assertTrue или assertFalse для переменных a b c d e чтобы тест проходил
         // ↓↓↓↓ КОД ДЛЯ ЗАМЕНЫ ↓↓↓↓
-        assertTrue(e);
-        assertTrue(b);
-        assertTrue(c);
+        assertTrue(a);
+        assertFalse(b);
+        assertFalse(c);
         assertFalse(d);
-        assertFalse(e);
+        assertTrue(e);
         // ↑↑↑↑ КОД ДЛЯ ЗАМЕНЫ ↑↑↑↑
 
     }
