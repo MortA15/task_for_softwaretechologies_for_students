@@ -11,21 +11,27 @@ public enum EmployeeType {
     Формула вычисления зп: если месяц четный, то baseSalary, иначе baseSalary/2
      */
     Manager{
-
+        public Employee createEmployee(String name, int baseSalary) {
+            return new Manager(name, baseSalary);
+        }
     },
 
     /*
     Формула вычисления зп: всегда baseSalary
      */
     Programmer{
-
+        public Employee createEmployee(String name, int baseSalary) {
+            return new Programmer(name, baseSalary);
+        }
     },
     /*
     Формула вычисления зп: baseSalary * количество дней в месяце в текущем году
     Вычисление количества дней в месяце: YearMonth.of(LocalDate.now().getYear(), month).lengthOfMonth()
      */
     Tester{
-
+        public Employee createEmployee(String name, int baseSalary) {
+            return new Tester(name, baseSalary);
+        }
     };
-
+    public abstract Employee createEmployee(String name, int baseSalary);
 }

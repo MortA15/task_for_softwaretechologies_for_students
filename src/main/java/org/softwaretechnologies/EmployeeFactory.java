@@ -16,8 +16,6 @@ public class EmployeeFactory {
 
 
     public static Employee createEmployee(String name, int baseSalary, EmployeeType type) {
-        // TODO: реализуйте вышеуказанную функцию
-
-        return null;
+        return type.createEmployee(name, baseSalary); //возвращает нужный объект в соответствие с типом
     }
 }
