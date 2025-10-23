@@ -33,11 +33,14 @@ public class Zoo {
      * @return Звуки животных, в алфавитном порядке имени животного.
      */
     public List<String> soundAllAnimalsSortByName() {
-        List<String> sounds = new ArrayList<>();
-        // TODO заполните корректно список звуков
+        List<Animal> sortedAnimals = new ArrayList<>(animalList);
+        sortedAnimals.sort(Comparator.comparing(Animal::getName));
 
+        List<String> sounds = new ArrayList<>();
+        for (Animal animal : sortedAnimals) {
+            sounds.add(animal.sound());
+        }
         return sounds;
     }
-
 
 }
