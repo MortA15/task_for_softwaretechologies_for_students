@@ -1,6 +1,6 @@
 package org.softwaretechnologies.animals;
 
-public abstract class Animal {
+public abstract class Animal implements Comparable<Animal> {
     private final String name;
 
     public Animal(String name) {
@@ -19,4 +19,9 @@ public abstract class Animal {
      * @return Метод должен возвращать строку, соответсвующую издаваемого животным звука.
      */
     public abstract String sound();
+
+    @Override
+    public int compareTo(Animal o) {
+        return name.compareTo(o.name);
+    }
 }
